@@ -76,6 +76,8 @@ impl RobloxRequireMode {
             source_path.display(),
         );
 
+        // println!("GENERATING REQUIRE FOR: {:?}", require_path.display());
+
         if let Some((sourcemap, sourcemap_path)) = self
             .cached_sourcemap
             .as_ref()
@@ -120,6 +122,8 @@ impl RobloxRequireMode {
                 "make require path relative to source: `{}`",
                 relative_require_path.display()
             );
+
+            println!("PATH TO CHECK: {:?}", relative_require_path.display());
 
             let require_is_module_folder_name =
                 current.is_module_folder_name(&relative_require_path);

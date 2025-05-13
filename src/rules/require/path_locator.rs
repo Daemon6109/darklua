@@ -37,8 +37,19 @@ impl<'a, 'b, 'c> RequirePathLocator<'a, 'b, 'c> {
 
         if is_require_relative(&path) {
             let mut new_path = source.to_path_buf();
+
+            if require_is_init(&new_path) {
+                new_path.pop();
+            }
+
             new_path.pop();
             new_path.push(path);
+            path = new_path;
+        } else if is_require_self(&path) {
+            let mut new_path = source.to_path_buf();
+            new_path.pop();
+            let short_path: PathBuf = remove_first_component(&path);
+            new_path.push(short_path);
             path = new_path;
         } else if !path.is_absolute() {
             {
@@ -93,8 +104,25 @@ impl<'a, 'b, 'c> RequirePathLocator<'a, 'b, 'c> {
     }
 }
 
+fn remove_first_component(path: &Path) -> PathBuf {
+    let mut components = path.components();
+    components.next(); // Skip the first component
+    components.as_path().to_path_buf()
+}
+
 // the `is_relative` method from std::path::Path is not what darklua needs
 // to consider a require relative, which are paths that starts with `.` or `..`
 fn is_require_relative(path: &Path) -> bool {
     path.starts_with(Path::new(".")) || path.starts_with(Path::new(".."))
+}
+
+fn require_is_init(path: &Path) -> bool {
+    match path.file_name().and_then(|s| s.to_str()) {
+        Some("init.lua") | Some("init.luau") => true,
+        _ => false,
+    }
+}
+
+fn is_require_self(path: &Path) -> bool {
+    path.starts_with(Path::new("@self"))
 }

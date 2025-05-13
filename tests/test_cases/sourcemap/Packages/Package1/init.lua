@@ -1,1 +1,1 @@
-return require("./value")
+return require("@self/value")
