@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Run tests (release)
-        run: cargo test --release
+        run: cargo test --locked --release
 
       - name: Build darklua (release)
         run: cargo build --release
@@ -69,7 +69,7 @@ jobs:
         run: cargo clippy -- -D warnings
 
       - name: Run tests
-        run: cargo test
+        run: cargo test --locked
 
   code-style:
     name: Verify code style
