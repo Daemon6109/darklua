@@ -130,7 +130,7 @@ jobs:
           fi
 
       - name: Build darklua binary
-        run: cargo build --locked --release --target ${{ matrix.cargo-target }}
+        run: cargo build --release --target ${{ matrix.cargo-target }}
         env:
           CARGO_TARGET_DIR: output
 
